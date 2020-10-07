@@ -62,26 +62,24 @@ sequences = tok.texts_to_sequences(X_train) # Turning the tokenized train packag
 sequences_matrix = sequence.pad_sequences(sequences, maxlen=max_len) # making ever single sequence in same length, with max_len variable.  
 
 model = Sequential()
-model.add(Embedding(max_words,40,input_length=max_len)) # LSTM ağı için verilerin uygun boyutlara getirilmesi ve veri küçültme işleminin yapıldığı katman
-model.add(LSTM(128)) # öz yinemeli lstm ağı, ağa seri halde gelen veri gruplarını kullanarak takip eden verilerin çıktılarını tahmin etmek için kullandım
-model.add(Dropout(0.5)) # ezberleme sorununu azaltmak için dropout katmanı ekledim
-model.add(Dense(96)) # ardından yapay sinir ağı katmanları ve katmanda kullanılacak relu aktivasyon fonksiyonunu ekledim.
+model.add(Embedding(max_words,40,input_length=max_len)) # To embed the integer values and making the sequences have proper dimension to feed LSTM layer.
+model.add(LSTM(128)) # RNN LSTM Network, to predict the next value thanks to sequences.
+model.add(Dropout(0.5)) # To prevent the over-fitting problem, Dropout was added.
+model.add(Dense(96)) # Next, an ANN Dense to increase network size.
 model.add(Activation('relu')) 
 model.add(Dropout(0.4))
 model.add(Dense(64))
 model.add(Activation('relu'))
-model.add(Dense(28)) # çıktı dizi boyutu 28 olduğu için 28 olarak ayarladım
-model.add(Activation('softmax')) #kategorik ve çoklu değer tahmini olduğu için softmax fonksiyonunu kullandım.
+model.add(Dense(28)) # output (y) sequence length
+model.add(Activation('softmax')) # for multiple output and multiple class works softmax function is needed.  
 
-model.summary() #modelin ağ aşamalarını görmek için summary fonksiyonunu kullandım.
-model.compile(loss='categorical_crossentropy',optimizer="adam", metrics=['accuracy']) #modelin optimizasyon ve kayıp fonksiyonlarına uydurulması kısmı
+model.summary() # To see the each layer steps summary() function was used.
+model.compile(loss='categorical_crossentropy',optimizer="adam", metrics=['accuracy']) # Specifying the loss and optimizer functions for training phase and definition of metrics.
+model.fit(sequences_matrix, y_train, epochs=15, batch_size=64, validation_split=0.13) # Model training and test phase. epochs:number of usage of whole dataset, batch_size: number of training data in 1 epochs.
 
-model.fit(sequences_matrix, y_train, epochs=15, batch_size=64, validation_split=0.13) # eğitim ve teste başlama kısmı
-#callbacks=[EarlyStopping(monitor='val_loss',min_delta=0.0001)]
-
-#-----------------------------------------------------------------------------------------------
-
-# yine aynı temizleme kodunu tekil tahmin için kullandım ve kendi cümlemi ekledim
+"""
+Single sentence prediciton and label finding
+"""
 sent = ["In addition to moisture , there was also a significant negative correlation between ether content and TGEV survival ."]
 sent_temiz = []
 for sen in range(0, len(sent)):
