@@ -23,7 +23,6 @@ fig = plt.figure(figsize=(8,8))
 pl = df.groupby('Target Concept').Evidence.count().plot.bar(ylim=0)
 plt.show() # plotting class data distribution as a graphic
 
-
 """
 Data pre-processing phase with regular expression
 """
@@ -78,8 +77,9 @@ model.compile(loss='categorical_crossentropy',optimizer="adam", metrics=['accura
 model.fit(sequences_matrix, y_train, epochs=15, batch_size=64, validation_split=0.13) # Model training and test phase. epochs:number of usage of whole dataset, batch_size: number of training data in 1 epochs.
 
 """
-Single sentence prediciton and label finding
+Single sentence prediciton and label finding phase.
 """
+# Cleaning the input sentence.
 sent = ["In addition to moisture , there was also a significant negative correlation between ether content and TGEV survival ."]
 sent_temiz = []
 for sen in range(0, len(sent)):
@@ -94,16 +94,15 @@ for sen in range(0, len(sent)):
     x = ' '.join(x)
     sent_temiz.append(x)
 
-#cümlenin dizi haline getirilmesi ve eşit girdi boyuna getirilmesi
+# turning the single input into a sequence and padding its length.
 tok.fit_on_texts(sent_temiz)
 s = tok.texts_to_sequences(sent_temiz)
 s = sequence.pad_sequences(s,maxlen=max_len)
 
-labels = list(sorted(set(target_concept))) #sınıfları sıralı ve küme haline getirdim.
+labels = list(sorted(set(target_concept))) # Sorting all classes and making them in a set to prevent repetition.
 
-y_prob = model.predict(s) #model tahmin çıktısı
-y_classes = y_prob.argmax(axis=-1) #tahmin çıktısının içindeki en büyük değerin indisi, y_classes ve aşağısı bana ait değil, tahmin için bulabildiğim tek çözüm buydu maalesef
-print(" ")
-predicted_label = labels[y_classes[0]] # elde edilen indisle sınıf seçimi
+pred = model.predict(s) # Model prediction output.
+class = pred.argmax(axis=-1) # Getting the index of the biggest value in the pred variable.
+predicted_label = labels[class[0]] # Label selection with the obtained index.
 print(predicted_label)
 
