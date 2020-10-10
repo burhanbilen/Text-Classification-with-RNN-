@@ -2,7 +2,6 @@ import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import re
-#import numpy as np
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
@@ -10,7 +9,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM, Activation
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
-#from keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
 df = pd.read_excel('literature_articles_all.xlsx', sheet_name = 'All Evidence_no_aggregation', usecols=['Target Concept', 'Evidence'])
@@ -105,4 +103,3 @@ pred = model.predict(s) # Model prediction output.
 class = pred.argmax(axis=-1) # Getting the index of the biggest value in the pred variable.
 predicted_label = labels[class[0]] # Label selection with the obtained index.
 print(predicted_label)
-
