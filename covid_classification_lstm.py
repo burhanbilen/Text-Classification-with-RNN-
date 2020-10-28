@@ -46,7 +46,6 @@ onehot_encoder = OneHotEncoder(sparse=False)
 integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
 y = onehot_encoder.fit_transform(integer_encoded) 
 
-
 """
 Limitation of long texts with max_words variable and turning the training package into numerical status.
 """
