@@ -92,7 +92,6 @@ for sen in range(0, len(sent)):
     x = ' '.join(x)
     sent_temiz.append(x.strip())
 
-tok.fit_on_texts(sent_temiz)
 s = tok.texts_to_sequences(sent_temiz)
 s = sequence.pad_sequences(s,maxlen = X_train.shape[1])
 
